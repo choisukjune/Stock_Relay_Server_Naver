@@ -302,6 +302,32 @@ onload = function(){
 		})
 	}
 
+	global.getExchangeIndex = function(cbFunction){
+		webview.executeJavaScript(`
+
+		new Promise((resolve, reject) => {
+			var xhr = new XMLHttpRequest();
+				xhr.onload = function() {
+				if (xhr.status === 200 || xhr.status === 201) {
+					//console.log(JSON.parse(  ));
+					resolve( xhr.responseText )
+				} else {s
+					console.error(xhr.responseText);
+				}
+			};
+			xhr.open('GET', 'https://api.stock.naver.com/marketindex/majors/part1');
+			xhr.send();
+		});
+
+		`
+		).then(function(data){
+			
+			//여기서처리해야함
+			console.log( JSON.parse( data ) )
+			cbFunction( data );
+		})
+	}
+
 	global.server = http.createServer(function(req, res){
 
 		req.on('error', function( err ){
