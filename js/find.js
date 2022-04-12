@@ -1032,7 +1032,7 @@ var paramToObject = function( _url ){
 		http://localhost:8888/getCandleDataByCd?cd=035720&startTime=20220201&endTime=20220211
 	* </code>
 	*/
-	global.server.addRouter("/getAgricultural",function( req, res ){
+	global.server.addRouter("/getAgriculturalIndex",function( req, res ){
 
 		var routerNm = req.url.split("?")[0];
 		var paramsO = paramToObject( req.url );
@@ -1043,7 +1043,7 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
 		
-		global.getAgricultural(function(d){
+		global.getAgriculturalIndex(function(d){
 			res.end( d )		
 		})
 		

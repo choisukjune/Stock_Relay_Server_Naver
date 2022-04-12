@@ -380,7 +380,7 @@ onload = function(){
 		})
 	}
 
-	global.getAgricultural = function(cbFunction){
+	global.getAgriculturalIndex = function(cbFunction){
 		webview.executeJavaScript(`
 
 		new Promise((resolve, reject) => {
