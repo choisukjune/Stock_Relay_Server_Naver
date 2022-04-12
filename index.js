@@ -315,7 +315,7 @@ onload = function(){
 					console.error(xhr.responseText);
 				}
 			};
-			xhr.open('GET', 'https://api.stock.naver.com/marketindex/majors/part1');
+			xhr.open('GET', 'https://api.stock.naver.com/marketindex/exchange/majors');
 			xhr.send();
 		});
 
