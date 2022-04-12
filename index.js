@@ -354,6 +354,57 @@ onload = function(){
 		})
 	}
 
+	global.getMetalIndex = function(cbFunction){
+		webview.executeJavaScript(`
+
+		new Promise((resolve, reject) => {
+			var xhr = new XMLHttpRequest();
+				xhr.onload = function() {
+				if (xhr.status === 200 || xhr.status === 201) {
+					//console.log(JSON.parse(  ));
+					resolve( xhr.responseText )
+				} else {s
+					console.error(xhr.responseText);
+				}
+			};
+			xhr.open('GET', 'https://api.stock.naver.com/marketindex/metals');
+			xhr.send();
+		});
+
+		`
+		).then(function(data){
+			
+			//여기서처리해야함
+			console.log( JSON.parse( data ) )
+			cbFunction( data );
+		})
+	}
+
+	global.getAgricultural = function(cbFunction){
+		webview.executeJavaScript(`
+
+		new Promise((resolve, reject) => {
+			var xhr = new XMLHttpRequest();
+				xhr.onload = function() {
+				if (xhr.status === 200 || xhr.status === 201) {
+					//console.log(JSON.parse(  ));
+					resolve( xhr.responseText )
+				} else {s
+					console.error(xhr.responseText);
+				}
+			};
+			xhr.open('GET', 'https://api.stock.naver.com/marketindex/agricultural');
+			xhr.send();
+		});
+
+		`
+		).then(function(data){
+			
+			//여기서처리해야함
+			console.log( JSON.parse( data ) )
+			cbFunction( data );
+		})
+	}
 	global.server = http.createServer(function(req, res){
 
 		req.on('error', function( err ){
