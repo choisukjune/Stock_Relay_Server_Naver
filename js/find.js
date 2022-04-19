@@ -649,10 +649,10 @@ var paramToObject = function( _url ){
 	*
 	* @example
 	* <code>
-		http://localhost:8888/getCandleDataByCd?cd=035720&startTime=20220201&endTime=20220211
+		http://localhost:8888/getIntegrationByCd?cd=000660
 	* </code>
 	*/
-	global.server.addRouter("/getIntegration",function( req, res ){
+	global.server.addRouter("/getIntegrationByCd",function( req, res ){
 
 		var routerNm = req.url.split("?")[0];
 		var paramsO = paramToObject( req.url );
@@ -663,7 +663,7 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
 	
-		var url = `https://m.stock.naver.com/api/stock/005930/integration`;
+		var url = `https://m.stock.naver.com/api/stock/${paramsO.cd}/integration`;
 		https.get( url, function(response){
 			response.setEncoding('utf8');
 			var d=""
