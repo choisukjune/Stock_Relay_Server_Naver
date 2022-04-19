@@ -9,6 +9,7 @@ if( console ) console.log( "[ S ] - " + fileNm + "----------" );
 
 var fs = require( "fs" );
 var url = require('url');
+var https = require( "https" );
 
 //-------------------------------------------------------;
 // VARIABLE;
@@ -134,588 +135,6 @@ var paramToObject = function( _url ){
 	*
 	* @example
 	* <code>
-		http://localhost:8888/find?brand=varihope&page=1
-	* </code>
-	*/
-	global.server.addRouter("/find",function( req, res ){
-
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( req.url );
-		var _tdbjs_nm = "find";
-				
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery.replace( "<!=BRAND_NM=!>", paramsO.brandNm )
-		.replace( "<!=PAGE=!>", paramsO.page );
-		var dbjs_nm = "find_" + paramsO.brandNm + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-		res.end( r )	
-
-	});
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/findHashTag?tag=...&page=1
-	* </code>
-	*/
-	global.server.addRouter("/findHashTag",function( req, res ){
-		debugger;
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( decodeURIComponent( req.url  ));
-		var _tdbjs_nm = "findHashTag";
-				
-		var _tag = decodeURIComponent( paramsO.tag )
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery.replace( "<!=TAG=!>", decodeURIComponent( paramsO.tag ) )
-		.replace( "<!=PAGE=!>", paramsO.page )
-		.replace( "<!=LIMIT=!>", paramsO.limit );
-		var dbjs_nm = "find_" + _tag.replace(/\s/gi,"_") + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-				
-		res.end( r )
-
-
-	});
-
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/findContentsAll?page=1
-	* </code>
-	*/
-	global.server.addRouter("/findContentsAll",function( req, res ){
-		debugger;
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( req.url );
-		var _tdbjs_nm = "findContentsAll";
-				
-		var _tag = decodeURIComponent( paramsO.tag )
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery.replace( "<!=PAGE=!>", paramsO.page );
-		var dbjs_nm = _tdbjs_nm + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-		res.end( r )	
-
-	});
-
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/findAll?page=1
-	* </code>
-	*/
-	global.server.addRouter("/findAll",function( req, res ){
-		debugger;
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( req.url );
-		var _tdbjs_nm = "findAll";
-				
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery.replace( "<!=PAGE=!>", paramsO.page )
-				.replace( "<!=LIMIT=!>", paramsO.limit );
-		var dbjs_nm = _tdbjs_nm + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-		res.end( r )	
-
-	});
-
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/find_report_All_by_brand?brand=varihope
-	* </code>
-	*/
-	global.server.addRouter("/getTotalCount",function( req, res ){
-		
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( req.url );
-		var _tdbjs_nm = "getTotalCount";
-				
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery.replace( "<!=COL_NM=!>", paramsO.colNm )
-				.replace( "<!=DB_NM=!>", paramsO.dbNm );
-		var dbjs_nm = "find_" + paramsO.colNm + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-		res.end( r )	
-
-	});
-
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/getHtml?fileNm=report_varihope_202008
-	* </code>
-	*/
-	global.server.addRouter("/getHtml",function( req, res ){
-		
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( req.url );
-				
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		
-		try
-		{
-			var _tHtml = fs.readFileSync( _thtml_PATH + "/" + paramsO.fileNm + ".thtml" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - thtml File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-
-		res.end( _tHtml )	
-
-	});
-
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/getTags
-	* </code>
-	*/
-	global.server.addRouter("/getTags",function( req, res ){
-		
-		var routerNm = req.url.split("?")[0];
-		//var paramsO = paramToObject( req.url );
-		var _tdbjs_nm = "getTags";
-				
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery//.replace( "<!=COL_NM=!>", paramsO.colNm );
-		var dbjs_nm = "find_" + _tdbjs_nm + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-		res.end( r )	
-
-	});
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/findContentsAll?page=1
-	* </code>
-	*/
-	global.server.addRouter("/searchProduct",function( req, res ){
-		debugger;
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( decodeURIComponent( req.url  ));
-		var _tdbjs_nm = "searchProduct";
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery.replace( "<!=PAGE=!>", paramsO.page )
-			.replace( "<!=LIMIT=!>", paramsO.limit )
-			.replace( "<!=KEYWORD=!>", paramsO.keyword )
-			.replace( "<!=PAGE=!>", paramsO.page );
-		var dbjs_nm = _tdbjs_nm + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-
-		res.end( r )	
-
-	});
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/findContentsAll?page=1
-	* </code>
-	*/
-	global.server.addRouter("/searchByShop",function( req, res ){
-		
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( decodeURIComponent( req.url  ));
-		var _tdbjs_nm = "searchByShop";
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery.replace( "<!=PAGE=!>", paramsO.page )
-			.replace( "<!=LIMIT=!>", paramsO.limit )
-			.replace( "<!=SHOP=!>", paramsO.shop )
-			.replace( "<!=PAGE=!>", paramsO.page );
-		var dbjs_nm = _tdbjs_nm + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-
-
-		res.end( r )	
-
-	});
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
-		http://localhost:8888/findContentsAll?page=1
-	* </code>
-	*/
-	global.server.addRouter("/searchByBrand",function( req, res ){
-		debugger;
-		var routerNm = req.url.split("?")[0];
-		var paramsO = paramToObject( decodeURIComponent( req.url  ));
-		var _tdbjs_nm = "searchByBrand";
-
-		res.statusCode = 200;
-		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
-		res.setHeader( "Access-Control-Allow-Origin", "*" );
-		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
-		console.log( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ); 
-		
-		try
-		{
-			var _tQuery = fs.readFileSync( _tDbjs_PATH + "/" + _tdbjs_nm + ".tdbjs" ).toString();
-		}
-		catch( err )
-		{
-			console.log( routerNm + " - DBJS File Not Found! - " + err );
-			res.end("{ sucess : 0, data : null }");
-		}
-		
-		var query = _tQuery.replace( "<!=PAGE=!>", paramsO.page )
-			.replace( "<!=LIMIT=!>", paramsO.limit )
-			.replace( "<!=BRAND=!>", paramsO.brand )
-			.replace( "<!=PAGE=!>", paramsO.page );
-		var dbjs_nm = _tdbjs_nm + ".dbjs";
-
-		var FILE_PATH = DBJS_DIRECTORY_PATH + dbjs_nm;
-		
-		console.log( FILE_PATH )
-
-		fs.writeFileSync( DBJS_DIRECTORY_PATH + dbjs_nm , query, { flag : "w" } );
-		var r = exec_query_DB( dbjs_nm )
-
-		res.end( r )	
-
-	});
-	/**
-	 * 쿼리파일을 실행하는 라우터
-	 * @function
-	 * @param {http.ClientRequest} req
-	 * <code>
-		{
-
-		}
-	* </code>
-	*
-	* @param {http.ClientResponse} res
-	* <code>
-		{
-
-		}
-	* </code>
-	*
-	* @example
-	* <code>
 		http://localhost:8888/getStockInfo?cd=035720
 	* </code>
 	*/
@@ -729,10 +148,23 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Origin", "*" );
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
-		global.getStockInfo( paramsO.cd, function(d){
+		
+//		global.getStockInfo( paramsO.cd, function(d){
+//
+//			res.end( d )		
+//		})
+		var url = `https://polling.finance.naver.com/api/realtime/domestic/stock/${paramsO.cd}`
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
 
-			res.end( d )		
-		})
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
 		
 
 	});
@@ -768,10 +200,23 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Origin", "*" );
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
-		global.getMarketIndex( function(d){
+//		global.getMarketIndex( function(d){
+//
+//			res.end( d )		
+//		})
 
-			res.end( d )		
-		})
+		var url = `https://polling.finance.naver.com/api/realtime/domestic/index/KOSPI,KOSDAQ`;
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
 		
 
 	});
@@ -807,12 +252,64 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Origin", "*" );
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
-		global.getMarketIndexGlobal( function(d){
-
-			res.end( d )		
-		})
+//		global.getMarketIndexGlobal( function(d){
+//
+//			res.end( d )		
+//		})
 		
+		var r = {};
+		var arr = [ "USA","CHN","HKG","JPN","VNM","ETC"	];
 
+		var reqMarketIndexGlobal = function(){
+			
+			var cd = arr[ reqMarketIndexGlobal.cnt ];
+
+			var url00 = `https://api.stock.naver.com/index/nation/${cd}`
+			var url01 = `https://api.stock.naver.com/futures/nation/${cd}`
+
+			https.get( url00, function(response){
+				response.setEncoding('utf8');
+				var d=""
+				response.on('end', function (){
+					
+					if( !r[ cd ] ) r[ cd ] = [];
+					var _d  = JSON.parse( d );
+					r[ cd ] = _d;
+
+					https.get( url01, function(response){
+						response.setEncoding('utf8');
+						var d=""
+						response.on('end', function () {
+
+							if( !r[ cd ] ) r[ cd ] = [];
+							var _d  = JSON.parse( d );
+							r[ cd ].push( _d )
+
+							if( reqMarketIndexGlobal.cnt == arr.length -1 )
+							{
+								res.end( JSON.stringify( r ) );
+							}
+							else
+							{
+								++reqMarketIndexGlobal.cnt;
+								reqMarketIndexGlobal()
+							}
+						});
+
+						response.on('data', function (body) {
+							d += body;
+						});
+					});	
+				});
+
+				response.on('data', function (body) {
+					d += body;
+				});
+			});	
+		}
+		reqMarketIndexGlobal.cnt = 0;
+		reqMarketIndexGlobal();
+			
 	});
 			/**
 	 * 쿼리파일을 실행하는 라우터
@@ -846,11 +343,25 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Origin", "*" );
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
-		global.getNewsByCd( paramsO.cd, function(d){
 
-			res.end( d )		
-		})
-		
+//		global.getNewsByCd( paramsO.cd, function(d){
+//
+//			res.end( d )		
+//		})
+
+		var url = `https://m.stock.naver.com/api/news/stock/${paramsO.cd}?pageSize=20&page=1&searchMethod=title_entity_id.basic`
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
+
 
 	});
 				/**
@@ -886,11 +397,23 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
 		
-		global.getCandleDataByCd( paramsO.cd,paramsO.startTime,paramsO.endTime, function(d){
-
-			res.end( d )		
-		})
+//		global.getCandleDataByCd( paramsO.cd,paramsO.startTime,paramsO.endTime, function(d){
+//
+//			res.end( d )		
+//		})
 		
+		var url = `https://api.finance.naver.com/siseJson.naver?symbol=${paramsO.cd}&requestType=1&startTime=${paramsO.startTime}&endTime=${paramsO.endTime}&timeframe=day`
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
 
 	});
 				/**
@@ -926,10 +449,22 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
 		
-		global.getExchangeIndex(function(d){
-			res.end( d )		
-		})
+//		global.getExchangeIndex(function(d){
+//			res.end( d )		
+//		})
 		
+		var url = `https://api.stock.naver.com/marketindex/exchange/majors`;
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
 
 	});
 				/**
@@ -965,10 +500,22 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
 		
-		global.getEnergyIndex(function(d){
-			res.end( d )		
-		})
-		
+//		global.getEnergyIndex(function(d){
+//			res.end( d )		
+//		})
+
+		var url = `https://api.stock.naver.com/marketindex/energy`;
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
 
 	});
 				/**
@@ -1004,10 +551,22 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
 		
-		global.getMetalIndex(function(d){
-			res.end( d )		
-		})
-		
+//		global.getMetalIndex(function(d){
+//			res.end( d )		
+//		})
+
+		var url = `https://api.stock.naver.com/marketindex/metals`;
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
 
 	});
 				/**
@@ -1043,9 +602,22 @@ var paramToObject = function( _url ){
 		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
 		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
 		
-		global.getAgriculturalIndex(function(d){
-			res.end( d )		
-		})
+//		global.getAgriculturalIndex(function(d){
+//			res.end( d )		
+//		})
+
+		var url = `https://api.stock.naver.com/marketindex/agricultural`;
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
 		
 
 	});
