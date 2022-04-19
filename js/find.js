@@ -407,7 +407,11 @@ var paramToObject = function( _url ){
 			response.setEncoding('utf8');
 			var d=""
 			response.on('end', function () {
-				res.end( d );
+
+				var _data = JSON.parse( d.replace(/\n/gi,"").replace(/\t/gi,"").replace(/\'/gi,"\"") );
+					_data.shift();
+				var data = _data
+				res.end( JSON.stringify( data ) );
 			});
 
 			response.on('data', function (body) {
