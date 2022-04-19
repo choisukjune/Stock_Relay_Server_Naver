@@ -283,7 +283,12 @@ var paramToObject = function( _url ){
 
 							if( !r[ cd ] ) r[ cd ] = [];
 							var _d  = JSON.parse( d );
-							r[ cd ].push( _d )
+
+							var i = 0,iLen = d.length,io;
+							for(;i<iLen;++i){
+								io = d[ i ]
+								r[ cd ].push( io );
+							}
 
 							if( reqMarketIndexGlobal.cnt == arr.length -1 )
 							{
