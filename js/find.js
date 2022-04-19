@@ -630,6 +630,55 @@ var paramToObject = function( _url ){
 		
 
 	});
+	/**
+	 * 쿼리파일을 실행하는 라우터
+	 * @function
+	 * @param {http.ClientRequest} req
+	 * <code>
+		{
+
+		}
+	* </code>
+	*
+	* @param {http.ClientResponse} res
+	* <code>
+		{
+
+		}
+	* </code>
+	*
+	* @example
+	* <code>
+		http://localhost:8888/getCandleDataByCd?cd=035720&startTime=20220201&endTime=20220211
+	* </code>
+	*/
+	global.server.addRouter("/getIntegration",function( req, res ){
+
+		var routerNm = req.url.split("?")[0];
+		var paramsO = paramToObject( req.url );
+
+		res.statusCode = 200;
+		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
+		res.setHeader( "Access-Control-Allow-Origin", "*" );
+		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
+		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
+	
+		var url = `https://m.stock.naver.com/api/stock/005930/integration`;
+		https.get( url, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function () {
+				res.end( d );
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});
+		
+
+	});
+	
 })();
 
 //-------------------------------------------------------;
