@@ -678,7 +678,87 @@ var paramToObject = function( _url ){
 		
 
 	});
-	
+	/**
+	 * 쿼리파일을 실행하는 라우터
+	 * @function
+	 * @param {http.ClientRequest} req
+	 * <code>
+		{
+
+		}
+	* </code>
+	*
+	* @param {http.ClientResponse} res
+	* <code>
+		{
+
+		}
+	* </code>
+	*
+	* @example
+	* <code>
+		http://localhost:8888/getStockInfo?cd=035720
+	* </code>
+	*/
+	global.server.addRouter("/getTopRankVolume",function( req, res ){
+
+		var routerNm = req.url.split("?")[0];
+		var paramsO = paramToObject( req.url );
+
+		res.statusCode = 200;
+		res.setHeader( "Access-Control-Allow-Headers", "Content-Type" );
+		res.setHeader( "Access-Control-Allow-Origin", "*" );
+		res.setHeader( "Access-Control-Allow-Methods", "OPTIONS,POST,GET" );
+		res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
+//		global.getMarketIndexGlobal( function(d){
+//
+//			res.end( d )		
+//		})
+		
+		var r = {};
+
+		var url00 = `https://m.stock.naver.com/api/stocks/quantTop/KOSPI?page=1&pageSize=20`
+		var url01 = `https://m.stock.naver.com/api/stocks/quantTop/KOSDAQ?page=1&pageSize=20`
+
+		https.get( url00, function(response){
+			response.setEncoding('utf8');
+			var d=""
+			response.on('end', function (){
+				
+				if( !r[ cd ] ) r[ cd ] = [];
+				var _d  = JSON.parse( d ).stocks;
+				r[ cd ] = _d;
+
+				https.get( url01, function(response){
+					response.setEncoding('utf8');
+					var d=""
+					response.on('end', function () {
+
+						if( !r[ cd ] ) r[ cd ] = [];
+						var _d  = JSON.parse( d );
+
+						var i = 0,iLen = _d.stocks.length,io;
+						for(;i<iLen;++i){
+							io = _d.stocks[ i ]
+							r[ cd ].push( io );
+						}
+
+						res.end( JSON.stringify( r ) );
+
+					});
+
+					response.on('data', function (body) {
+						d += body;
+					});
+				});	
+			});
+
+			response.on('data', function (body) {
+				d += body;
+			});
+		});	
+			
+	});
 })();
 
 //-------------------------------------------------------;
