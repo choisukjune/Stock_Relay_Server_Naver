@@ -715,7 +715,7 @@ var paramToObject = function( _url ){
 //			res.end( d )		
 //		})
 		
-		var r = {};
+		var r = [];
 
 		var url00 = `https://m.stock.naver.com/api/stocks/quantTop/KOSPI?page=1&pageSize=20`
 		var url01 = `https://m.stock.naver.com/api/stocks/quantTop/KOSDAQ?page=1&pageSize=20`
@@ -725,22 +725,20 @@ var paramToObject = function( _url ){
 			var d=""
 			response.on('end', function (){
 				
-				if( !r[ cd ] ) r[ cd ] = [];
 				var _d  = JSON.parse( d ).stocks;
-				r[ cd ] = _d;
+				r = _d;
 
 				https.get( url01, function(response){
 					response.setEncoding('utf8');
 					var d=""
 					response.on('end', function () {
 
-						if( !r[ cd ] ) r[ cd ] = [];
 						var _d  = JSON.parse( d );
 
 						var i = 0,iLen = _d.stocks.length,io;
 						for(;i<iLen;++i){
 							io = _d.stocks[ i ]
-							r[ cd ].push( io );
+							r.push( io );
 						}
 
 						res.end( JSON.stringify( r ) );
